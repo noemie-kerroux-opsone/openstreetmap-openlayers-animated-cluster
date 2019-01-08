@@ -221,4 +221,33 @@ jQuery(document).ready(function($) {
       }
     }
 
+    // Obtenir des coordonnées à partir d'une adresse :
+    var address = "MAIL BARTHELEMY THIMONNIER 77185 LOGNES";
+    var lonlat  = getLonLatByAdress(address);
+
+    function getLonLatByAdress(address) {
+      var geoLonLat = null;
+      var url_address = "https://nominatim.openstreetmap.org/search?q=" + encodeURI(address) + "&format=json&polygon=1&addressdetails=1";
+
+      $.ajax({
+        url: url_address,
+        type: 'get',
+        async: false,
+        dataType: 'json',
+        success: function(data)
+        {
+          if( typeof data !== 'undefined' ) {
+            var olAdd = data[0];
+            if( typeof olAdd !== 'undefined' && olAdd.lat.length > 0 && olAdd.lon.length > 0 ) {
+              geoLonLat = {
+                lon: olAdd.lon,
+                lat: olAdd.lat
+              };
+            }
+          }
+        }
+      });
+      return geoLonLat;
+    }
+
 });
